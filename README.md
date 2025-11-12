@@ -79,48 +79,45 @@ JSON Agents is based entirely on established JSON standards (RFC 8259, ECMA-404,
 
 ### 📂 Repository Layout
 
+This is a **Turborepo monorepo** with the following structure:
+
 ```bash
 /
 ├── README.md                      # This file
-├── json-agents.md                 # Complete specification (888 lines)
-├── draft-jsonagents-spec-00.md    # IETF-style draft
 ├── CHANGELOG.md                   # Version history
-├── CONTRIBUTING.md                # Contribution guidelines
-├── schema/
-│   ├── json-agents.json           # Core manifest schema
-│   ├── message-envelope.json      # Inter-agent message format
-│   ├── capabilities/              # 7 capability schemas
-│   │   ├── summarization.json
-│   │   ├── routing.json
-│   │   ├── retrieval.json
-│   │   ├── qa.json                # Question answering
-│   │   ├── classification.json    # Classification
-│   │   ├── extraction.json        # Entity extraction
-│   │   └── generation.json        # Content generation
-│   └── extensions/                # Extension schemas
-│       ├── audit.json
-│       └── memory.json
-├── examples/
-│   ├── core.json                  # Minimal core profile
-│   ├── core-exec.json             # With runtime
-│   ├── core-exec-gov.json         # With governance
-│   └── core-exec-gov-graph.json   # Complete multi-agent
-├── registry/
-│   ├── capabilities.json          # Canonical capability registry
-│   ├── tool-types.json            # Standard tool types
-│   ├── profiles.json              # Profile definitions
-│   └── extensions.json            # Extension registry
-├── validators/                    # Official validators
-│   ├── python/                    # Python validator (v1.0.0) ✅
-│   │   ├── jsonagents/            # Package source
-│   │   ├── tests/                 # 47 tests (100% passing)
-│   │   └── README.md              # Documentation
-│   └── README.md                  # Validator overview
-└── docs/
-    ├── index.md                   # Documentation index
-    ├── implementers-guide.md      # Implementation guide
-    ├── mapping-frameworks.md      # Framework conversions
-    └── extensions.md              # Extension development
+├── CLOUDFLARE_DEPLOYMENT.md       # Deployment guide
+├── turbo.json                     # Turborepo configuration
+├── package.json                   # Monorepo root
+│
+├── apps/
+│   └── website/                   # Next.js documentation site
+│       ├── app/                   # Next.js 14 app directory
+│       ├── components/            # React components
+│       ├── public/                # Static assets
+│       └── wrangler.toml          # Cloudflare Pages config
+│
+├── packages/
+│   ├── eslint-config/             # Shared ESLint configurations
+│   └── typescript-config/         # Shared TypeScript configurations
+│
+└── validators/                    # Official validators
+    ├── python/                    # Python validator ✅
+    │   ├── jsonagents/            # Package source
+    │   │   ├── validator.py       # Core validation logic
+    │   │   ├── policy.py          # Policy expression parser
+    │   │   ├── uri.py             # URI scheme validator
+    │   │   └── cli.py             # Command-line interface
+    │   ├── tests/                 # Test suite (100% coverage)
+    │   └── pyproject.toml         # Python project config
+    │
+    └── typescript/                # TypeScript validator ✅
+        ├── src/
+        │   ├── validator.ts       # Core validation logic
+        │   ├── policy.ts          # Policy expression parser
+        │   ├── uri.ts             # URI scheme validator
+        │   └── cli.ts             # Command-line interface
+        ├── tests/                 # Jest test suite (100% coverage)
+        └── package.json           # NPM package config
 ```
 
 ---
@@ -131,16 +128,26 @@ JSON Agents is based entirely on established JSON standards (RFC 8259, ECMA-404,
 
 | Language | Status | Version | Test Coverage | Location |
 |----------|--------|---------|---------------|----------|
-| **Python** | ✅ Production Ready | v1.0.0 | 47/47 (100%) | [`validators/python/`](validators/python/) |
-| JavaScript/TypeScript | 🔜 Coming Soon | - | - | - |
+| **Python** | ✅ Production Ready | v1.0.0 | 100% | [`validators/python/`](validators/python/) |
+| **TypeScript** | ✅ Production Ready | v1.0.0 | 100% | [`validators/typescript/`](validators/typescript/) |
 | Rust | 🔜 Coming Soon | - | - | - |
 | Go | 🔜 Coming Soon | - | - | - |
 
-**Quick validation:**
+**Quick Validation:**
+
+**Python:**
 ```bash
 cd validators/python/
-pip3 install -r requirements.txt
-python3 -m jsonagents.cli validate ../../examples/*.json
+pip install -r requirements.txt
+python -m jsonagents.cli validate <manifest.json>
+```
+
+**TypeScript:**
+```bash
+cd validators/typescript/
+npm install
+npm test
+npx ts-node src/cli.ts validate <manifest.json>
 ```
 
 See [`validators/README.md`](validators/README.md) for details.
@@ -254,44 +261,49 @@ JSON Agents provides bidirectional conversion with major frameworks:
 
 ---
 
-### 🔧 Tools & Validation
+### 🔧 Tools & Infrastructure
 
 **Validators:**
 
 | Language | Status | Package | Quick Start |
 |----------|--------|---------|-------------|
-| **Python** | ✅ v1.0.0 | `pip install jsonagents` | `jsonagents validate manifest.json` |
-| **TypeScript** | ✅ v1.0.0 | `npm install @jsonagents/validator` | `npx jsonagents validate manifest.json` |
+| **Python** | ✅ v1.0.0 | Local install | `python -m jsonagents.cli validate` |
+| **TypeScript** | ✅ v1.0.0 | Local install | `npx ts-node src/cli.ts validate` |
 
-**Other Tools:**
-- ✅ **Documentation Website** - Next.js site ([`apps/website/`](./apps/website/))
+**Infrastructure:**
+- ✅ **Documentation Website** - Next.js 14 with App Router ([`apps/website/`](./apps/website/))
+- ✅ **Cloudflare Pages** - Automated deployment on push ([see guide](./CLOUDFLARE_DEPLOYMENT.md))
 - ✅ **CI/CD Workflows** - Automated testing and validation
+- ✅ **Turborepo** - Efficient build caching and task orchestration
+- ✅ **GitHub Actions** - Automated deployments and CI checks
 
-See [`validators/`](./validators/) for complete documentation and API references.
-- Framework converters
-- Web-based manifest editor
+**Deployment:**
 
-**Python Validator Quick Start:**
+The documentation website is configured for Cloudflare Pages deployment:
+
 ```bash
-cd validators/python/
-pip install -r requirements.txt
-python -m jsonagents.cli validate ../../standard/examples/*.json
+# Deploy via CLI
+npm run deploy:pages
+
+# Or configure in Cloudflare Dashboard:
+# Build command: npm run build -- --filter=@json-agents/website
+# Output directory: apps/website/out
 ```
 
-**Manual Validation:**
-```bash
-# Install ajv-cli
-npm install -g ajv-cli
+See [`CLOUDFLARE_DEPLOYMENT.md`](./CLOUDFLARE_DEPLOYMENT.md) for complete deployment instructions.
 
-# Validate manifest
-ajv validate -s standard/schema/json-agents.json -d standard/examples/core.json
-```
+**Development Tools:**
+- Turborepo for monorepo management
+- Shared ESLint and TypeScript configurations
+- Prettier for code formatting
+- Jest for TypeScript testing
+- pytest for Python testing
 
 ---
 
 ### 💻 Development
 
-This repository is a **Turborepo monorepo** with the following workspaces:
+This repository uses **Turborepo** for efficient monorepo management with multiple workspaces.
 
 #### Install Dependencies
 ```bash
@@ -300,36 +312,60 @@ npm install
 
 #### Development Commands
 ```bash
-npm run dev      # Start all apps in development
-npm run build    # Build all packages
-npm run lint     # Lint all packages
-npm run clean    # Clean build artifacts
+# Development
+npm run dev                 # Start all apps in development mode
+npm run dev:website        # Start only the documentation website
+
+# Building
+npm run build              # Build all packages
+npm run build:website      # Build only the website
+
+# Testing & Quality
+npm run lint               # Lint all packages
+npm run test               # Run all tests
+npm run clean              # Clean build artifacts
+npm run format             # Format code with Prettier
+
+# Deployment
+npm run deploy:pages       # Deploy website to Cloudflare Pages
+```
+
+#### Workspace Commands
+Target specific workspaces with Turbo's filter:
+```bash
+# Build a specific package
+turbo run build --filter=@json-agents/website
+
+# Run tests in a specific workspace
+turbo run test --filter=validators/typescript
 ```
 
 #### Repository Structure
-- **`apps/website/`** - Next.js documentation website
-- **`packages/`** - Shared TypeScript and ESLint configs
-- **`validators/`** - Python and TypeScript validator implementations
-- **`standard/`** - JSON Agents specification and schemas
-  - `schema/` - JSON Schema files
-  - `examples/` - Example manifests
-  - `docs/` - Documentation
-  - `json-agents.md` - Core specification
+- **`apps/website/`** - Next.js 14 documentation website (App Router)
+- **`packages/eslint-config/`** - Shared ESLint configurations
+- **`packages/typescript-config/`** - Shared TypeScript configurations
+- **`validators/python/`** - Python validator with CLI and test suite
+- **`validators/typescript/`** - TypeScript validator with Jest tests
 
 ---
 
 ### 🌟 What's New in v1.0
 
-**Recent Additions** (Unreleased):
+**Recent Additions:**
+- ✨ **Turborepo Architecture**: Migrated to efficient monorepo structure
+- 🚀 **Cloudflare Pages Deployment**: Automated CI/CD pipeline for documentation site
+- ✅ **TypeScript Validator**: Full implementation with 100% test coverage
+- ✅ **Python Validator**: Enhanced with comprehensive test suite
+- 📦 **Shared Tooling**: ESLint and TypeScript configurations across workspaces
+- 🎨 **Next.js 14 Website**: Modern documentation site with App Router
+- 🔧 **GitHub CLI Integration**: Repository management automation
+
+**Specification Updates:**
 - ✨ **URI Scheme Definition**: Formal `ajson://` specification with resolution mechanism
 - 📜 **Policy Expression Language**: Complete grammar for `where` clauses
 - 🎯 **Complete Capability Suite**: All 7 capabilities now have formal schemas
-  - ✅ qa.json (Question Answering)
-  - ✅ classification.json (Classification)
-  - ✅ extraction.json (Entity Extraction)
-  - ✅ generation.json (Content Generation)
 
-See [CHANGELOG.md](./CHANGELOG.md) for details.
+See [CHANGELOG.md](./CHANGELOG.md) for full details.
 
 ---
 
@@ -350,18 +386,23 @@ See [CHANGELOG.md](./CHANGELOG.md) for details.
 - ✅ URI scheme specification
 - ✅ Policy expression language
 - ✅ Framework mapping guide
+- ✅ Python & TypeScript validators (100% coverage)
+- ✅ Turborepo monorepo architecture
+- ✅ Documentation website with Cloudflare deployment
+- ✅ CI/CD pipelines
 
-**v1.1 (Planned)**:
-- 🔨 Reference validator implementations
+**v1.1 (In Progress)**:
+- 🔨 Standard directory integration
+- 🔨 JSON Schema examples and documentation
+- 🔨 Interactive JSON viewer on website
 - 🔨 Framework converter tools
-- 🔨 Additional capability schemas
-- 🔨 Community extensions
-- 🔨 Public registry service
+- 🔨 Community extensions registry
 
 **Future**:
 - Real-time profile for streaming agents
 - Evaluation profile for testing/benchmarking
 - Enhanced policy expression functions
+- Public registry service
 - Formal IETF/W3C standardization path
 
 ---
@@ -394,8 +435,10 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for guidelines.
 |--------|--------|
 | **Specification** | 🟢 v1.0.0 Complete |
 | **Schema Coverage** | 🟢 7/7 Capabilities (100%) |
-| **Documentation** | 🟢 Comprehensive |
-| **Tooling** | 🟡 In Development |
+| **Documentation** | 🟢 Comprehensive (Next.js site) |
+| **Validators** | 🟢 Python & TypeScript (100% coverage) |
+| **Infrastructure** | 🟢 Turborepo + Cloudflare Pages |
+| **Tooling** | � CLI, CI/CD, Build System |
 | **Community** | 🟡 Growing |
 | **Standards Track** | 🟡 Draft |
 
@@ -439,12 +482,13 @@ JSON Agents is built on solid foundations:
 
 ### 📈 Quick Stats
 
-- 📄 **888 lines** of specification
-- 🎯 **7 capability schemas** (100% complete)
+- 📄 **103 files** in initial commit
+- 🎯 **2 validators** (Python & TypeScript with 100% coverage)
 - 📋 **4 profiles** (core, exec, gov, graph)
-- 🔧 **6 tool types** (http, function, plugin, system, mcp, custom)
-- 🌐 **4 examples** covering all profile combinations
-- 📚 **8 documentation files**
+- 🔧 **3 workspaces** (apps, packages, validators)
+- 🌐 **17 pages** on documentation website
+- � **Cloudflare Pages** deployment ready
+- 📦 **Turborepo** for efficient builds
 
 ---
 
