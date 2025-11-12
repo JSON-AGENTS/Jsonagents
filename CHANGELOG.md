@@ -5,6 +5,63 @@ This project adheres to [Semantic Versioning 2.0.0](https://semver.org/).
 
 ---
 
+## [1.0.1] — 2025-11-12
+**Tooling and Documentation Release**
+
+### Added
+
+- **Comprehensive CLI Tool** (`packages/cli/`)
+  - Full-featured command-line interface with 9 commands
+  - `init` - Interactive manifest generator with 8 templates
+  - `validate` - Schema validation with watch mode
+  - `convert` - JSON ↔ YAML conversion
+  - `format` - Pretty-print and minify manifests
+  - `info` - Display manifest details in tables
+  - `search` - Search agent registries
+  - `fetch` - Download manifests from registry
+  - `test-policy` - Test policy expressions
+  - `test-uri` - Validate URI format
+  - 8 built-in templates (router, qa, summarization, generation, retrieval, classification, extraction, custom)
+  - Interactive prompts with Inquirer
+  - File watching with Chokidar
+  - Commander.js framework
+  - 360 dependencies, 0 vulnerabilities
+  - npm package `@jsonagents/cli`
+
+- **Documentation Website** (`apps/website/`)
+  - Next.js 14 documentation site with App Router
+  - Cloudflare Pages deployment configured
+  - Static export for edge deployment
+  - GitHub Actions workflow for automated deployment
+  - Comprehensive specification browser
+  - Examples and quick start guides
+
+### Changed
+
+- **README.md** - Major update to showcase tooling
+  - Added CLI, Python, and TypeScript validator badges
+  - New "Tooling & Development" section with CLI command table
+  - Enhanced "Quick Start" section with practical examples
+  - Updated repository structure to include CLI package
+  - Improved validator documentation with usage examples
+  - Highlighted CLI and validators in key features
+
+- **Turborepo Structure** - Organized as monorepo
+  - Added `turbo.json` for build orchestration
+  - Workspace configuration for apps and packages
+  - Shared TypeScript and ESLint configurations
+  - Build caching and dependency management
+
+### Known Issues
+
+- TUI component temporarily disabled due to React type version conflicts
+  - Ink framework requires React 18 types
+  - Next.js website requires React 19 types
+  - All TUI functionality available through CLI commands
+  - TUI code preserved in `tui.tsx.skip` for future reintegration
+
+---
+
 ## [1.1.0] — 2025-11-11  
 **Infrastructure and Tooling Release**
 

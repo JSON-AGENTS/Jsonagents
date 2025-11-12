@@ -1,6 +1,6 @@
 # JSON Agents
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](./CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](./LICENSE)
 [![JSON Schema](https://img.shields.io/badge/JSON%20Schema-2020--12-purple.svg)](https://json-schema.org/draft/2020-12/json-schema-core.html)
 [![Standard](https://img.shields.io/badge/standard-RFC%208259-orange.svg)](https://datatracker.ietf.org/doc/html/rfc8259)

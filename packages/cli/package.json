@@ -1,6 +1,6 @@
 {
   "name": "@jsonagents/cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Comprehensive CLI tool for JSON Agents with TUI",
   "main": "dist/index.js",
   "bin": {

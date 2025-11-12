@@ -17,7 +17,7 @@ const program = new Command();
 program
   .name('jsonagents')
   .description('Comprehensive CLI tool for JSON Agents')
-  .version('1.0.0');
+  .version('1.0.1');
 
 // Init Command
 program
