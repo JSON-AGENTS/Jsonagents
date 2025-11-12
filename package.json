@@ -9,11 +9,14 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:website": "turbo run build --filter=@json-agents/website",
     "dev": "turbo run dev",
+    "dev:website": "turbo run dev --filter=@json-agents/website",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "clean": "turbo run clean",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "deploy:pages": "npm run build:website && wrangler pages deploy apps/website/out --project-name=jsonagents"
   },
   "devDependencies": {
     "prettier": "^3.1.0",
